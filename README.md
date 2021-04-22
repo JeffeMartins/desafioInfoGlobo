@@ -17,3 +17,8 @@ Startar Reactjs
 No mesmo nível que o package.json
 
 Yarn start
+
+MongoDB/AWS
+
+https://cloud.mongodb.com/
+
