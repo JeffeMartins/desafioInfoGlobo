@@ -14,6 +14,8 @@ app.use(cors());
 const port = process.env["SERVER_PORT"] || 8080;
 app.use(routes);
 
-app.listen(port)
+app.listen(port, () =>{
+    console.log(`App Start in port ${port}`);
+})
 
 

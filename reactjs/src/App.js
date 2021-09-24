@@ -6,25 +6,31 @@ import InputBase from '@material-ui/core/InputBase';
 import {fade, makeStyles} from '@material-ui/core/styles';
 import axios from "axios";
 import React, {useState, useEffect} from 'react';
+import Cookies from 'universal-cookie';
 
 
 export default function App() {
     const classes = useStyles();
     const [dados, setData] = useState([]);
-    const [token, setToken] = useState('');
+   
+    const cookies = new Cookies();
 
 
-    const authentication = () => {
+    const authentication = async () => {
 
-        axios
-            .post('http://localhost:8081/authorization/api', {
+       
+
+        await axios
+            .post('http://localhost:8080/authorization/api', {
                 "user": "infoGlobo",
                 "password": "12321"
             })
             .then(resp => {
+
                 const authoToken = resp.data.token;
-                process.env.TOKEN = authoToken;
-                setToken(authoToken);
+ 
+                cookies.set("token", authoToken);
+
             })
             .catch(error => {
                 console.log(error)
@@ -33,11 +39,11 @@ export default function App() {
     }
 
 
-    const getNewsInformation = () => {
-        axios
-            .get('http://localhost:8081/noticias', {
+    const getNewsInformation = async () => {
+       await axios
+            .get('http://localhost:8080/noticias', {
                 headers: {
-                    authorization: token
+                    authorization: cookies.get("token"),
                 }
             })
             .then(resp => {
@@ -48,17 +54,16 @@ export default function App() {
             })
     }
 
-
     useEffect(() => {
 
-        authentication();
+        const auth = async () =>{
+           await authentication();
 
-        if (token) {
             getNewsInformation();
         }
-
-
-    });
+         auth();
+        
+    },[dados]);
 
     return (
         <div className={classes.root}>
