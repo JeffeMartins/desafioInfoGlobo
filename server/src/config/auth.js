@@ -1,0 +1,2 @@
+function required(name){const value=process.env[name];if(!value)throw Object.assign(new Error('Authentication is not configured'),{status:503});return value;}
+module.exports={get secret(){const value=required('JWT_SECRET');if(value.length<32)throw Object.assign(new Error('Signing key is too short'),{status:503});return value;},get user(){return required('AUTH_USER');},get password(){return required('AUTH_PASSWORD');}};

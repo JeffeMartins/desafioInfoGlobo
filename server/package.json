@@ -1,20 +1,24 @@
 {
-  "name": "infoglobo",
-  "version": "1.0.0",
-  "description": "editora-globo",
-  "main": "app.js",
-  "author": "jefferson martins",
-  "license": "MIT",
-  "dependencies": {
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "dotenv": "^8.2.0",
-    "express": "^4.17.1",
-    "jsonwebtoken": "^8.5.1",
-    "mongoose": "^5.12.5",
-    "nodemon": "^2.0.13"
+  "name": "news-api",
+  "version": "1.1.0",
+  "private": true,
+  "engines": {
+    "node": ">=24 <25"
   },
   "scripts": {
-    "dev": "nodemon src/app.js"
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "express": "5.3.0",
+    "cors": "2.8.6",
+    "dotenv": "18.0.9",
+    "jsonwebtoken": "9.0.3",
+    "mongoose": "9.11.4",
+    "helmet": "8.3.0"
+  },
+  "devDependencies": {
+    "supertest": "7.3.1"
   }
 }

@@ -1,23 +1,3 @@
-const jwt = require('jsonwebtoken');
-const authConfig = require('./../config/auth.json');
-
-module.exports = {
-    async index(req, resp) {
-
-        try {
-            if (req.body.user == authConfig.user && req.body.password == authConfig.password) {
-                const token = jwt.sign({user: req.body.user, password: req.body.password}, authConfig.secret, {
-                    expiresIn: 86400,
-                })
-
-                return resp.json({createToken: 'ok', token: token})
-            } else {
-                return resp.status(400).send({error: 'fails authentication'})
-            }
-
-
-        } catch (e) {
-            return resp.status(400).send({error: 'web token failed'})
-        }
-    }
-}
+const jwt=require('jsonwebtoken');const crypto=require('node:crypto');const config=require('../config/auth');
+function equals(left,right){if(typeof left!=='string' || typeof right!=='string')return false;const a=crypto.createHash('sha256').update(left).digest();const b=crypto.createHash('sha256').update(right).digest();return crypto.timingSafeEqual(a,b);}
+module.exports={async index(req,res){if(typeof req.body.user!=='string' || typeof req.body.password!=='string')return res.status(400).json({error:'Provide user and password'});try{if(!equals(req.body.user,config.user) || !equals(req.body.password,config.password))return res.status(401).json({error:'Invalid credentials'});return res.json({token:jwt.sign({sub:req.body.user},config.secret,{expiresIn:'1h',algorithm:'HS256'}),expires_in:3600,type:'Bearer'});}catch(error){return res.status(error.status || 500).json({error:'Authentication unavailable'});}}};

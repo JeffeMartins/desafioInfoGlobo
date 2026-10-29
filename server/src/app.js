@@ -1,21 +1,5 @@
-require('dotenv').config({path: __dirname + '/./../.env-example'});
-
-const express = require('express');
-const cors = require('cors');
-const routes = require('./router/routes');
-var bodyParser = require('body-parser');
-const app = express();
-
-app.use(bodyParser.urlencoded({extended: false}));
-app.use(bodyParser.json())
-app.use(cors());
-// app.use(express.json());
-
-const port = process.env["SERVER_PORT"] || 8080;
-app.use(routes);
-
-app.listen(port, () =>{
-    console.log(`App Start in port ${port}`);
-})
-
-
+require('dotenv/config');const express=require('express');const cors=require('cors');const helmet=require('helmet');const mongoose=require('./database');const app=express();
+app.disable('x-powered-by');app.use(helmet());app.use(cors({origin:process.env.CORS_ORIGIN || 'http://localhost:5173'}));app.use(express.json({limit:'32kb'}));app.use(require('./router/routes'));
+app.use((error,req,res,next)=>res.status(500).json({error:'Request could not be completed'}));
+async function start(){await mongoose.connect(process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/news',{serverSelectionTimeoutMS:5000});const server=app.listen(Number(process.env.SERVER_PORT || 8080));const close=()=>server.close(()=>mongoose.disconnect());process.once('SIGTERM',close);process.once('SIGINT',close);}
+if(require.main===module)start().catch(()=>{console.error('Could not initialize API/database');process.exitCode=1;});module.exports=app;

@@ -1,0 +1,24 @@
+name: desafioinfoglobo
+services:
+  api:
+    build: ./server
+    ports: ["127.0.0.1:8080:8080"]
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/news
+      NODE_ENV: development
+      AUTH_USER: ${AUTH_USER:?Configure AUTH_USER}
+      AUTH_PASSWORD: ${AUTH_PASSWORD:?Configure AUTH_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET:?Configure JWT_SECRET}
+    depends_on:
+      mongo:
+        condition: service_healthy
+  mongo:
+    image: mongo:8
+    volumes: [mongo-data:/data/db]
+    healthcheck:
+      test: [CMD, mongosh, --quiet, --eval, "db.adminCommand('ping').ok"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+volumes:
+  mongo-data:
