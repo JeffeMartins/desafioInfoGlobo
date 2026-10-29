@@ -3,15 +3,15 @@ const mongoose = require('../database');
 const NotifiasSchema = new mongoose.Schema({
     titulo: {
         type: String,
-        require: true,
+        required: true,
     },
     conteudo: {
         type: String,
-        require: true,
+        required: true,
     },
     data_publicacao: {
         type: String,
-        require: true,
+        required: true,
     },
 })
 

@@ -6,7 +6,7 @@ const verifyJWT = require('../middlewares/auth')
 const routes = Router();
 
 routes.post('/authorization/api', Auth.index)
-routes.get('/noticias', verifyJWT, NotifiasGlobo.index);
-routes.post('/insert/noticia', InsertNoticia.index);
+routes.get('/noticias', NotifiasGlobo.index);
+routes.post('/insert/noticia', verifyJWT, InsertNoticia.index);
 
 module.exports = routes;

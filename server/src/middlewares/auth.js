@@ -1,13 +1,2 @@
-const jwt = require('jsonwebtoken');
-const authConfig = require('../config/auth.json');
-
-module.exports = (req, resp, next) => {
-    const token = req.headers.authorization;
-
-    if(!token) return resp.status(401).send({error: 'token not headers'})
-
-    jwt.verify(token, authConfig.secret, (err, decoded) => {
-        if (err) return resp.status(401).send({error: 'token invalid'})
-        next();
-    })
-}
+const jwt=require('jsonwebtoken');const config=require('../config/auth');
+module.exports=(req,res,next)=>{const header=req.headers.authorization;const token=header?.startsWith('Bearer ')?header.slice(7):header;if(!token)return res.status(401).json({error:'Missing bearer token'});try{jwt.verify(token,config.secret,{algorithms:['HS256']});next();}catch{return res.status(401).json({error:'Invalid bearer token'});}};
